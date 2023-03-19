@@ -1,0 +1,43 @@
+name: pull-and-deploy
+
+on:
+  workflow_run:
+    workflows: ["build-and-push"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          HOST: ${{ secrets.DEMO_SSH_HOST }}
+          USERNAME: ${{ secrets.DEMO_SSH_USERNAME }}
+          PASSWORD: ${{ secrets.DEMO_SSH_PASSWORD }}
+          PORT: ${{ secrets.DEMO_SSH_PORT }}
+          script_stop: true
+          script: |
+            IMG=odatafy-mongodb-example
+            # Login to ghcr 
+            echo ${{ secrets.DEMO_SSH_PASSWORD }} | sudo -S \
+            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+            # Pull the new image from ghcr
+            echo ${{ secrets.DEMO_SSH_PASSWORD }} | sudo -S \
+            docker pull ghcr.io/${{ github.repository_owner }}/${IMG}:latest
+            # write envs
+            printf "DB_URL=${{ secrets.DB_URL }} \n \
+            MINIO_PASS=${{ secrets.MINIO_PASS }} \n \
+            MINIO_USER=${{ secrets.MINIO_USER }} \n \
+            NODEMAILER_USER=${{ secrets.NODEMAILER_USER }} \n \
+            NODEMAILER_PASSWORD=${{ secrets.NODEMAILER_PASSWORD }}" > ./hosting/.env
+            # Replace the container and inject env variables
+            docker compose -f ./hosting/docker-compose.yml --env-file ./hosting/.env up -d --no-deps ${IMG}
+            # remove plaintext env
+            shred -u ./hosting/.env
