@@ -32,11 +32,7 @@ jobs:
             echo ${{ secrets.DEMO_SSH_PASSWORD }} | sudo -S \
             docker pull ghcr.io/${{ github.repository_owner }}/${IMG}:latest
             # write envs
-            printf "DB_URL=${{ secrets.DB_URL }} \n \
-            MINIO_PASS=${{ secrets.MINIO_PASS }} \n \
-            MINIO_USER=${{ secrets.MINIO_USER }} \n \
-            NODEMAILER_USER=${{ secrets.NODEMAILER_USER }} \n \
-            NODEMAILER_PASSWORD=${{ secrets.NODEMAILER_PASSWORD }}" > ./hosting/.env
+            printf "DB_URL=${{ secrets.ODATAFY_DB_URL }}" > ./hosting/.env
             # Replace the container and inject env variables
             docker compose -f ./hosting/docker-compose.yml --env-file ./hosting/.env up -d --no-deps ${IMG}
             # remove plaintext env
