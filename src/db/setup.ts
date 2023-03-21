@@ -49,7 +49,8 @@ export function getCategoryData(n: number) {
     for(let i=0; i<n; i++) {
         categoryData.push({
             name: faker.commerce.product(),
-            sku: faker.helpers.arrayElement([ parseInt(faker.random.numeric(8)), null ])
+            sku: faker.helpers.arrayElement([ parseInt(faker.random.numeric(8)), null ]),
+            tags: [1, 2, 3]
         });
     }
 

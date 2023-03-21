@@ -17,10 +17,11 @@ app.use(morgan('dev'));
 
 mongoose.connect(process.env.DB_URL as string, async ()=>{
     console.log('Database connection successfull')
-    await setupDatabase();
+    
+    if(process.env.ENVIRONMENT != "TEST") {
+        await setupDatabase();
+    }
 });
-
-
 
 app.use('/orders', OrderRouter);
 app.use('/products', ProductRouter);
