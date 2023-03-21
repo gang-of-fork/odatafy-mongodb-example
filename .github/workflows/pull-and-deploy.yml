@@ -26,10 +26,10 @@ jobs:
           script: |
             IMG=odatafy-mongodb-example
             # Login to ghcr 
-            echo ${{ secrets.DEMO_SSH_PASSWORD }} | sudo -S \
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S \
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
             # Pull the new image from ghcr
-            echo ${{ secrets.DEMO_SSH_PASSWORD }} | sudo -S \
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S \
             docker pull ghcr.io/${{ github.repository_owner }}/${IMG}:latest
             # write envs
             printf "DB_URL=${{ secrets.ODATAFY_DB_URL }}" > ./hosting/.env
