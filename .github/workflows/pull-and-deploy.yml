@@ -18,10 +18,10 @@ jobs:
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.3
         with:
-          HOST: ${{ secrets.DEMO_SSH_HOST }}
-          USERNAME: ${{ secrets.DEMO_SSH_USERNAME }}
-          PASSWORD: ${{ secrets.DEMO_SSH_PASSWORD }}
-          PORT: ${{ secrets.DEMO_SSH_PORT }}
+          HOST: ${{ secrets.SSH_HOST }}
+          USERNAME: ${{ secrets.SSH_USERNAME }}
+          PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          PORT: ${{ secrets.SSH_PORT }}
           script_stop: true
           script: |
             IMG=odatafy-mongodb-example
