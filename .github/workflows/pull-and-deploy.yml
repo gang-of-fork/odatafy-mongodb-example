@@ -36,4 +36,3 @@ jobs:
             # Replace the container and inject env variables
             docker compose -f ./hosting/docker-compose.yml --env-file ./hosting/.env up -d --no-deps ${IMG}
             # remove plaintext env
-            shred -u ./hosting/.env 
