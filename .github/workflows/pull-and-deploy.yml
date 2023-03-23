@@ -18,22 +18,22 @@ jobs:
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.3
         with:
-          HOST: ${{ secrets.DEMO_SSH_HOST }}
-          USERNAME: ${{ secrets.DEMO_SSH_USERNAME }}
-          PASSWORD: ${{ secrets.DEMO_SSH_PASSWORD }}
-          PORT: ${{ secrets.DEMO_SSH_PORT }}
+          HOST: ${{ secrets.SSH_HOST }}
+          USERNAME: ${{ secrets.SSH_USERNAME }}
+          PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          PORT: ${{ secrets.SSH_PORT }}
           script_stop: true
           script: |
             IMG=odatafy-mongodb-example
             # Login to ghcr 
-            echo ${{ secrets.DEMO_SSH_PASSWORD }} | sudo -S \
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S \
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
             # Pull the new image from ghcr
-            echo ${{ secrets.DEMO_SSH_PASSWORD }} | sudo -S \
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S \
             docker pull ghcr.io/${{ github.repository_owner }}/${IMG}:latest
             # write envs
-            printf "DB_URL=${{ secrets.ODATAFY_DB_URL }}" > ./hosting/.env
+            printf "ODATAFY_DB_URL=${{ secrets.ODATAFY_DB_URL }}" > ./hosting/.env
             # Replace the container and inject env variables
             docker compose -f ./hosting/docker-compose.yml --env-file ./hosting/.env up -d --no-deps ${IMG}
             # remove plaintext env
-            shred -u ./hosting/.env
+            shred -u ./hosting/.env 
