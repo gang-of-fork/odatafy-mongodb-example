@@ -10,7 +10,8 @@ router.get('/', async (req, res)=>{
     const query = getQueryFromUrl(req.url, {
         expandMapping: {
             'products': 'products'
-        }
+        },
+        regexSearchFields: [ 'customer' ]
     }) as PipelineStage[];
 
     const result = await Order.aggregate(query);

@@ -7,7 +7,7 @@ import { Category } from '../schemas/category';
 const router = Router();
 
 router.get('/', async (req, res)=>{
-    const query = getQueryFromUrl(req.url) as PipelineStage[];
+    const query = getQueryFromUrl(req.url, { regexSearchFields: [ 'name' ] }) as PipelineStage[];
 
     const result = await Category.aggregate(query);
 
