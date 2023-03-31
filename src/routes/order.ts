@@ -7,19 +7,24 @@ import { Order } from '../schemas/order';
 const router = Router();
 
 router.get('/', async (req, res)=>{
-    const query = getQueryFromUrl(req.url, {
-        expandMapping: {
-            'products': 'products'
-        },
-        regexSearchFields: [ 'customer' ]
-    }) as PipelineStage[];
 
-    const result = await Order.aggregate(query);
+    try {
+        const query = getQueryFromUrl(req.url, {
+            expandMapping: {
+                'products': 'products'
+            },
+            regexSearchFields: [ 'customer' ]
+        }) as PipelineStage[];
 
-    res.json({
-        'data': result,
-        'count': result.length
-    });
+        const result = await Order.aggregate(query);
+
+        res.json({
+            'data': result,
+            'count': result.length
+        });
+    } catch(e) {
+        res.status(500).json({ message: (<Error>e).message });
+    }
 });
 
 export { router as OrderRouter };
