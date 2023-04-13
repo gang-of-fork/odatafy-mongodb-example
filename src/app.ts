@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import * as bodyParser from 'body-parser';
 import { init as initializeOdatafy, getServiceMetaData } from 'odatafy-mongoose';
 
 import { setupDatabase } from './db/setup';
@@ -23,6 +24,9 @@ mongoose.connect(process.env.DB_URL as string, async ()=>{
         await setupDatabase();
     }
 });
+
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use('/orders', OrderRouter);
 app.use('/products', ProductRouter);

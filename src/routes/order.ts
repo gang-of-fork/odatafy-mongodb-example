@@ -27,4 +27,18 @@ router.get('/', async (req, res)=>{
     }
 });
 
+router.put('/:id', async (req, res) => {
+    try {
+        const result = await Order.findOneAndUpdate(
+            { _id: req.params.id },
+            req.body,
+            { new: true }
+        )
+
+        res.json(result)
+    } catch(e) {
+        res.status(400).json({ message: (<Error>e).message });
+    }
+});
+
 export { router as OrderRouter };
